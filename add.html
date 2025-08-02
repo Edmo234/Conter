@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Adicionar Produto com Categoria</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+  <style>
+    body {
+      background-color: #198754;
+      color: white;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .cabecalho {
+      padding: 1rem;
+      text-align: center;
+    }
+    .borda-completa {
+      background: rgb(255, 255, 255);
+      color: #212529;
+      border-radius: 15px;
+      border: 1px solid #212529;
+      margin: 5px 3px 3px 3px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 15px 15px;
+      overflow-y: auto;
+    }
+    #btnToggleAdd {
+      border-radius: 25px;
+      position: fixed;
+      top: 13px;
+      left: 9%;
+      transform: translateX(-50%);
+      z-index: 1050;
+    }
+    .form-area {
+      flex-grow: 1;
+      overflow-y: auto;
+    }
+    .rodape {
+      display: flex;
+      justify-content: center;
+      padding-top: 10px;
+    }
+    .btn-home {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .produto-item {
+      border: 1px solid #6c757d;
+      border-radius: 15px;
+      padding: 5px;
+      margin-bottom: 2px;
+      background-color: #f8f9fa;
+      color: #212529;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .produto-item i {
+      font-size: 1.3rem;
+      color: #198754;
+      flex-shrink: 0;
+    }
+    .produto-info {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+    .produto-info span {
+      margin-bottom: 2px;
+    }
+    .btn-group-vertical-icons {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      align-items: center;
+    }
+    .btn-group-vertical-icons .btn {
+      padding: 2px 4px;
+      font-size: 0.7rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cabeçalho -->
+  <div class="bg-success text-light cabecalho">
+    <h4 class="m-0 mt-1">Adicionar</h4>
+  </div>
+
+  <!-- Borda Completa -->
+  <div class="borda-completa">
+
+    <!-- Botão Toggle Formulário -->
+    <button class="btn btn-light shadow" type="button" id="btnToggleAdd" data-bs-toggle="collapse" data-bs-target="#collapseAddForm" aria-expanded="false" aria-controls="collapseAddForm" title="Adicionar Produto">
+      <i class="bi bi-plus-circle fs-8s text-success"></i>
+    </button>
+
+    <!-- Área do Formulário e Lista -->
+    <div class="form-area">
+      <div class="collapse mb-1" id="collapseAddForm">
+        <div class="card shadow-sm border border-dark">
+          <div class="card-header text-center fw-bold text-black">
+            Adicionar Produto
+          </div>
+          <div class="card-body bg-white text-dark">
+            <form id="produtoForm">
+              <div class="mb-3">
+                <label for="data" class="form-label fw-bold">Data</label>
+                <input type="date" id="data" class="form-control" required />
+              </div>
+              <div class="mb-3">
+                <label for="nomeProduto" class="form-label fw-bold">Nome do Produto</label>
+                <input type="text" id="nomeProduto" class="form-control" placeholder="Ex: Caneta Azul" required />
+              </div>
+              <div class="mb-3 d-flex align-items-center justify-content-between">
+                <label for="categoria" class="form-label fw-bold mb-0">Categoria</label>
+                <button type="button" id="btnNovaCategoria" class="btn btn-sm btn-outline-success">
+                  <i class="bi bi-plus-circle"></i> Nova Categoria
+                </button>
+              </div>
+              <select id="categoria" class="form-select mb-3" required></select>
+              <div id="novaCategoriaDiv" class="mb-3 d-none">
+                <input type="text" id="inputNovaCategoria" class="form-control mb-2" placeholder="Digite o nome da nova categoria" />
+                <div>
+                  <button type="button" id="btnConfirmarNovaCategoria" class="btn btn-success btn-sm me-2">Adicionar Categoria</button>
+                  <button type="button" id="btnCancelarNovaCategoria" class="btn btn-secondary btn-sm">Cancelar</button>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="valor" class="form-label fw-bold">Valor (R$)</label>
+                <input type="number" id="valor" class="form-control" placeholder="0.00" step="0.01" required />
+              </div>
+              <div class="text-center">
+                <button type="submit" class="btn btn-success px-5">Adicionar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lista de Produtos -->
+      <div class="card shadow-sm border border-dark mt-1">
+        <div class="card-header text-center fw-bold text-black">
+          Produtos Adicionados
+        </div>
+        <div class="card-body" id="listaProdutos">
+          <!-- Produtos serão listados aqui -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Botão Home no Rodapé -->
+    <div class="rodape">
+      <a href="home.html" class="btn btn-success btn-home">
+        <i class="bi bi-house"></i>
+      </a>
+    </div>
+
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const form = document.getElementById('produtoForm');
+  const listaProdutos = document.getElementById('listaProdutos');
+  const selectCategoria = document.getElementById('categoria');
+  const btnNovaCategoria = document.getElementById('btnNovaCategoria');
+  const novaCategoriaDiv = document.getElementById('novaCategoriaDiv');
+  const inputNovaCategoria = document.getElementById('inputNovaCategoria');
+  const btnConfirmarNovaCategoria = document.getElementById('btnConfirmarNovaCategoria');
+  const btnCancelarNovaCategoria = document.getElementById('btnCancelarNovaCategoria');
+
+  let categorias = [ 'Moto', 'Alimentos','Gerais'];
+
+  function atualizarCategorias() {
+    selectCategoria.innerHTML = '';
+    categorias.forEach(cat => {
+      const option = document.createElement('option');
+      option.value = cat;
+      option.textContent = cat;
+      selectCategoria.appendChild(option);
+    });
+  }
+
+  atualizarCategorias();
+
+  btnNovaCategoria.addEventListener('click', () => {
+    novaCategoriaDiv.classList.remove('d-none');
+    btnNovaCategoria.disabled = true;
+    inputNovaCategoria.value = '';
+    inputNovaCategoria.focus();
+  });
+
+  btnCancelarNovaCategoria.addEventListener('click', () => {
+    novaCategoriaDiv.classList.add('d-none');
+    btnNovaCategoria.disabled = false;
+    inputNovaCategoria.value = '';
+  });
+
+  btnConfirmarNovaCategoria.addEventListener('click', () => {
+    const novaCat = inputNovaCategoria.value.trim();
+    if (!novaCat) {
+      alert('Digite o nome da nova categoria.');
+      inputNovaCategoria.focus();
+      return;
+    }
+    if (categorias.includes(novaCat)) {
+      alert('Categoria já existe.');
+      inputNovaCategoria.focus();
+      return;
+    }
+    categorias.push(novaCat);
+    atualizarCategorias();
+    selectCategoria.value = novaCat;
+    novaCategoriaDiv.classList.add('d-none');
+    btnNovaCategoria.disabled = false;
+    inputNovaCategoria.value = '';
+  });
+
+  function criarItemProduto(produto) {
+    const item = document.createElement('div');
+    item.classList.add('produto-item');
+
+    item.innerHTML = `
+      <i class="bi bi-bag-fill"></i>
+      <div class="produto-info">
+        <span>${produto.nome}</span>
+        <span>Data: ${produto.data}</span>
+        <span>Categoria: ${produto.categoria}</span>
+        <span>Valor: R$ ${produto.valor}</span>
+      </div>
+      <div class="btn-group-vertical-icons">
+        <button class="btn btn-primary btn-editar" title="Editar"><i class="bi bi-pencil"></i></button>
+        <button class="btn btn-danger btn-excluir" title="Excluir"><i class="bi bi-trash"></i></button>
+      </div>
+    `;
+
+    item.querySelector('.btn-excluir').addEventListener('click', () => {
+      item.remove();
+      salvarProdutosLocalStorage();
+    });
+
+    item.querySelector('.btn-editar').addEventListener('click', () => {
+      const infoDiv = item.querySelector('.produto-info');
+      const btnGroup = item.querySelector('.btn-group-vertical-icons');
+
+      const spans = infoDiv.querySelectorAll('span');
+      const textoAtual = spans[0].textContent;
+      const dataAtual = spans[1].textContent.replace('Data: ', '');
+      const categoriaAtual = spans[2].textContent.replace('Categoria: ', '');
+      const valorAtual = spans[3].textContent.replace('Valor: R$ ', '');
+
+      infoDiv.innerHTML = `
+        <input type="text" class="form-control form-control-sm mb-1" value="${textoAtual}" id="editNome" />
+        <input type="date" class="form-control form-control-sm mb-1" value="${dataAtual}" id="editData" />
+        <select class="form-select form-select-sm mb-1" id="editCategoria"></select>
+        <input type="number" step="0.01" class="form-control form-control-sm" value="${valorAtual}" id="editValor" />
+      `;
+
+      const editCategoriaSelect = infoDiv.querySelector('#editCategoria');
+      categorias.forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat;
+        option.textContent = cat;
+        editCategoriaSelect.appendChild(option);
+      });
+      editCategoriaSelect.value = categoriaAtual;
+
+      btnGroup.innerHTML = `
+        <button class="btn btn-success btn-salvar" title="Salvar"><i class="bi bi-check-lg"></i></button>
+        <button class="btn btn-secondary btn-cancelar" title="Cancelar"><i class="bi bi-x-lg"></i></button>
+      `;
+
+      btnGroup.querySelector('.btn-salvar').addEventListener('click', () => {
+        const novoNome = infoDiv.querySelector('#editNome').value.trim();
+        const novaData = infoDiv.querySelector('#editData').value;
+        const novaCategoria = infoDiv.querySelector('#editCategoria').value;
+        const novoValor = parseFloat(infoDiv.querySelector('#editValor').value).toFixed(2);
+
+        if (!novoNome || !novaData || !novaCategoria || isNaN(novoValor)) {
+          alert('Preencha todos os campos corretamente.');
+          return;
+        }
+
+        infoDiv.innerHTML = `
+          <span>${novoNome}</span>
+          <span>Data: ${novaData}</span>
+          <span>Categoria: ${novaCategoria}</span>
+          <span>Valor: R$ ${novoValor}</span>
+        `;
+
+        btnGroup.innerHTML = `
+          <button class="btn btn-primary btn-editar" title="Editar"><i class="bi bi-pencil"></i></button>
+          <button class="btn btn-danger btn-excluir" title="Excluir"><i class="bi bi-trash"></i></button>
+        `;
+        btnGroup.className = 'btn-group-vertical-icons';
+
+        btnGroup.querySelector('.btn-excluir').addEventListener('click', () => {
+          item.remove();
+          salvarProdutosLocalStorage();
+        });
+
+        btnGroup.querySelector('.btn-editar').addEventListener('click', () => {
+          item.querySelector('.btn-editar').click();
+        });
+
+        salvarProdutosLocalStorage();
+      });
+
+      btnGroup.querySelector('.btn-cancelar').addEventListener('click', () => {
+        infoDiv.innerHTML = `
+          <span>${textoAtual}</span>
+          <span>Data: ${dataAtual}</span>
+          <span>Categoria: ${categoriaAtual}</span>
+          <span>Valor: R$ ${valorAtual}</span>
+        `;
+        btnGroup.innerHTML = `
+          <button class="btn btn-primary btn-editar" title="Editar"><i class="bi bi-pencil"></i></button>
+          <button class="btn btn-danger btn-excluir" title="Excluir"><i class="bi bi-trash"></i></button>
+        `;
+        btnGroup.className = 'btn-group-vertical-icons';
+
+        btnGroup.querySelector('.btn-excluir').addEventListener('click', () => {
+          item.remove();
+          salvarProdutosLocalStorage();
+        });
+
+        btnGroup.querySelector('.btn-editar').addEventListener('click', () => {
+          item.querySelector('.btn-editar').click();
+        });
+      });
+    });
+
+    return item;
+  }
+
+  function salvarProdutosLocalStorage() {
+    const produtosArray = [];
+    listaProdutos.querySelectorAll('.produto-item').forEach(item => {
+      const spans = item.querySelector('.produto-info').querySelectorAll('span');
+      const nome = spans[0].textContent;
+      const data = spans[1].textContent.replace('Data: ', '');
+      const categoria = spans[2].textContent.replace('Categoria: ', '');
+      const valor = spans[3].textContent.replace('Valor: R$ ', '');
+
+      produtosArray.push({ nome, data, categoria, valor });
+    });
+    localStorage.setItem('produtos', JSON.stringify(produtosArray));
+  }
+
+  function carregarProdutosLocalStorage() {
+    const produtos = JSON.parse(localStorage.getItem('produtos')) || [];
+    listaProdutos.innerHTML = '';
+    produtos.forEach(produto => {
+      const item = criarItemProduto(produto);
+      listaProdutos.appendChild(item);
+    });
+  }
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+
+    const data = document.getElementById('data').value;
+    const nomeProduto = document.getElementById('nomeProduto').value.trim();
+    const categoria = selectCategoria.value;
+    const valor = parseFloat(document.getElementById('valor').value).toFixed(2);
+
+    if (!data || !nomeProduto || !categoria || isNaN(valor)) {
+      alert('Preencha todos os campos corretamente.');
+      return;
+    }
+
+    const produto = { nome: nomeProduto, data, categoria, valor };
+    const itemProduto = criarItemProduto(produto);
+    listaProdutos.appendChild(itemProduto);
+
+    itemProduto.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    salvarProdutosLocalStorage();
+    form.reset();
+    selectCategoria.value = categorias[0];
+
+    const collapseAddForm = document.getElementById('collapseAddForm');
+    const bsCollapse = bootstrap.Collapse.getInstance(collapseAddForm);
+    if(bsCollapse) {
+      bsCollapse.hide();
+    }
+  });
+
+  carregarProdutosLocalStorage();
+</script>
+
+</body>
+</html>
